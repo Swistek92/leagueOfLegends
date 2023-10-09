@@ -18,11 +18,17 @@ export default async function Home() {
           <div className='bg-red-300 w-full m-3 p-3'>
             <hr />
             <h1 className='text-4xl'>{e.id}</h1>
-            <p>
+            <Image
+              width={100}
+              height={100}
+              alt='chemp'
+              src={`http://ddragon.leagueoflegends.com/cdn/13.19.1/img/champion/${e.id}.png`}
+            />
+            <div>
               {e.tags.map((e) => (
                 <p>{e}</p>
               ))}
-            </p>
+            </div>
           </div>
         );
       })}
