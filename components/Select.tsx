@@ -12,7 +12,7 @@ const Select = ({
 }) => {
   const [select, setSelectValue] = useState<string>(tags[0]);
   const [filterValue, setFilterValue] = useState<string>("");
-  const [filteredChmepions, setFilteredChmepions] =
+  const [filteredChampions, setFilteredChmapions] =
     useState<ChampionType[]>(champions);
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) =>
@@ -21,7 +21,6 @@ const Select = ({
     setFilterValue(event.target.value);
 
   useEffect(() => {
-    // Filter champions based on the selected tag and filter input
     const filtered = champions.filter((champion) => {
       const matchesTag = select === "All" || champion.tags.includes(select);
       const matchesSearch =
@@ -30,54 +29,57 @@ const Select = ({
       return matchesTag && matchesSearch;
     });
 
-    setFilteredChmepions(filtered);
+    setFilteredChmapions(filtered);
   }, [select, filterValue, champions]);
 
   return (
-    <div>
-      <div>
-        <h5 className='flex justify-center text-white text-lg font-bold mb-2'>
+    <div className=''>
+      <div className='fixed top-0 z-30 w-full bg-red-400'>
+        <h5 className='flex justify-center text-black text-lg font-bold mb-2'>
           Select type
         </h5>
         <select
           value={select}
           onChange={handleSelectChange}
-          className=' bg-blue-500 border border-blue-400 text-white text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mb-4 '
+          className='bg-red-300 border border-red-200 text-black text-lg rounded-lg focus:ring-red-300 focus:border-red-500 block w-full p-2.5 mb-4'
         >
           {tags.map((e) => (
-            <option key={e} value={e} className='bg-blue-500 flex text-center'>
+            <option key={e} value={e} className='bg-red-300 flex text-center'>
               {e}
             </option>
           ))}
         </select>
-        <h5 className='flex justify-center text-white text-lg font-bold mb-2'>
+        <h5 className='flex justify-center text-black text-lg font-bold mb-2'>
           Search...
         </h5>
         <input
-          className='w-full p-2 rounded-lg border border-blue-400 focus:outline-none focus:border-blue-500 text-white text-lg'
+          className='w-full p-2 rounded-lg border bg-red-300 border-blue-400 focus:outline-none focus:border-blue-500 text-black text-lg'
           type='text'
           placeholder='Search...'
           value={filterValue}
           onChange={handleFilterChange}
         />
       </div>
-      <div className='flex flex-col items-center m-3 p-3'>
-        {filteredChmepions.map((e) => {
+
+      <div className='flex flex-col items-center mt-2 '>
+        {filteredChampions.map((e) => {
           return (
-            <div className=' bg-red-300 w-screen  m-3 p-3 flex flex-col items-center'>
+            <div
+              key={e.key}
+              className='bg-red-300 w-80 rounded-lg m-3 p-3 flex flex-col cursor-pointer items-center hover:bg-red-700'
+            >
               <hr />
               <h1 className='text-4xl'>{e.id}</h1>
               <Image
                 width={100}
                 height={100}
-                alt='chemp'
+                alt='champ'
                 src={`http://ddragon.leagueoflegends.com/cdn/13.19.1/img/champion/${e.id}.png`}
               />
-              <div>
-                {e.tags.map((e) => (
-                  <p>{e}</p>
-                ))}
-              </div>
+
+              {e.tags.map((e) => (
+                <p key={e}>{e}</p>
+              ))}
             </div>
           );
         })}
