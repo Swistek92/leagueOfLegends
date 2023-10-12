@@ -1,11 +1,9 @@
-import Image from "next/image";
-// import { json } from "stream/consumers";
-import { ChampionType } from "../../types";
 import { ChampionManager } from "../../helpers";
 import { Select } from "../../components";
-export const allChempions: string = "All";
 
 export default async function Home() {
+  const allChempions: string = "All";
+
   const res = await fetch(
     "https://ddragon.leagueoflegends.com/cdn/13.19.1/data/en_US/champion.json"
   );
