@@ -3,6 +3,9 @@ const nextConfig = {
   images: {
     domains: ["ddragon.leagueoflegends.com"],
   },
+  env: {
+    ALL_CHEMPIONS: "All",
+  },
 };
 
 module.exports = nextConfig;
