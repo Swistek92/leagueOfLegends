@@ -33,7 +33,7 @@ const Select = ({
   }, [select, filterValue, champions]);
 
   return (
-    <div className=''>
+    <div className='bg-red-100'>
       <div className='fixed top-0 z-30 w-full bg-red-400'>
         <h5 className='flex justify-center text-black text-lg font-bold mb-2'>
           Select type
@@ -44,7 +44,11 @@ const Select = ({
           className='bg-red-300 border border-red-200 text-black text-lg rounded-lg focus:ring-red-300 focus:border-red-500 block w-full p-2.5 mb-4'
         >
           {tags.map((e) => (
-            <option key={e} value={e} className='bg-red-300 flex text-center'>
+            <option
+              key={e}
+              value={e}
+              className='bg-red-300 flex text-center hover:bg-red-500'
+            >
               {e}
             </option>
           ))}
@@ -53,7 +57,7 @@ const Select = ({
           Search...
         </h5>
         <input
-          className='w-full p-2 rounded-lg border bg-red-300 border-blue-400 focus:outline-none focus:border-blue-500 text-black text-lg'
+          className='w-full p-2 rounded-lg border bg-red-300 border-red-400 focus:outline-none focus:border-red-500 text-black text-lg'
           type='text'
           placeholder='Search...'
           value={filterValue}

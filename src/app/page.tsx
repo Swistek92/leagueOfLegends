@@ -1,5 +1,5 @@
+import Select from "../../components/Select";
 import { ChampionManager } from "../../helpers";
-import { Select } from "../../components";
 
 export default async function Home() {
   const allChempions: string = "All";
@@ -14,7 +14,7 @@ export default async function Home() {
   const chempions = championManager.getChempionsInArray();
 
   return (
-    <main className='w-full overflow-hidden bg-red-100    '>
+    <main className='w-full overflow-hidden    '>
       <div className='mt-44'>
         <Select tags={tags} champions={chempions} />
       </div>
