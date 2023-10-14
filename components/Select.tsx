@@ -32,6 +32,11 @@ const Select = ({
     });
 
     setFilteredChmapions(filtered);
+    if (filtered.length === 0) {
+      setNoChempions(true);
+    } else {
+      setNoChempions(false);
+    }
   }, [select, filterValue, champions]);
 
   return (
@@ -73,10 +78,27 @@ const Select = ({
               onChange={handleFilterChange}
             />
           </div>
+          {noChempions && (
+            <div className='flex items-center justify-center'>
+              <button
+                onClick={() => {
+                  setFilterValue("");
+                  setSelectValue("All");
+                }}
+                className='w-full bg-red-900 hover:bg-red-800 h-36 animate-pulse'
+              >
+                restart filter
+              </button>
+            </div>
+          )}
         </div>
       )}
 
-      <div className='flex flex-col items-center bg-blue-500  '>
+      <div
+        className={`flex flex-col items-center ${
+          showFilter ? "mt-44" : "mt-10"
+        }`}
+      >
         {filteredChampions.map((e) => {
           return (
             <div
