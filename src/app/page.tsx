@@ -1,4 +1,4 @@
-import Select from "../../components/Select";
+import { ChempionsList } from "../../components";
 import { ChampionManager } from "../../helpers";
 import { options } from "./api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
@@ -18,7 +18,7 @@ export default async function Home() {
   return (
     <main className='w-full overflow-hidden bg-red-100   '>
       <div>
-        <Select tags={tags} champions={chempions} />
+        <ChempionsList tags={tags} champions={chempions} />
       </div>
     </main>
   );

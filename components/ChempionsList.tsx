@@ -1,19 +1,21 @@
 "use client";
 import { useEffect, useState } from "react";
 import React from "react";
-import { ChampionType } from "../types";
+import { ChampionsType } from "../types";
 import Image from "next/image";
-const Select = ({
+import { redirect } from "next/navigation";
+import Link from "next/link";
+const ChempionsList = ({
   tags,
   champions,
 }: {
   tags: string[];
-  champions: ChampionType[];
+  champions: ChampionsType[];
 }) => {
   const [select, setSelectValue] = useState<string>(tags[0]);
   const [filterValue, setFilterValue] = useState<string>("");
   const [filteredChampions, setFilteredChmapions] =
-    useState<ChampionType[]>(champions);
+    useState<ChampionsType[]>(champions);
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [noChempions, setNoChempions] = useState(false);
 
@@ -101,7 +103,8 @@ const Select = ({
       >
         {filteredChampions.map((e) => {
           return (
-            <div
+            <Link
+              href={`/details/${e.name}`}
               key={e.key}
               className='bg-red-300 w-80 rounded-lg m-3 p-3 flex flex-col cursor-pointer items-center hover:bg-red-700'
             >
@@ -117,7 +120,7 @@ const Select = ({
               {e.tags.map((e) => (
                 <p key={e}>{e}</p>
               ))}
-            </div>
+            </Link>
           );
         })}
       </div>
@@ -125,4 +128,4 @@ const Select = ({
   );
 };
 
-export default Select;
+export default ChempionsList;

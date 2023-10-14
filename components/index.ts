@@ -1,4 +1,4 @@
 import FilterBaseOnSelect from "./FilterBaseOnSelect";
-import Select from "./Select";
+import ChempionsList from "./ChempionsList";
 import Navigation from "./Navigation";
-export { FilterBaseOnSelect, Select, Navigation };
+export { FilterBaseOnSelect, ChempionsList, Navigation };
