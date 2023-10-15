@@ -1,4 +1,5 @@
 import FilterBaseOnSelect from "./FilterBaseOnSelect";
 import ChempionsList from "./ChempionsList";
 import Navigation from "./Navigation";
-export { FilterBaseOnSelect, ChempionsList, Navigation };
+import AuthProvider from "./AuthProvider";
+export { FilterBaseOnSelect, ChempionsList, Navigation, AuthProvider };

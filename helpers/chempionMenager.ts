@@ -1,7 +1,7 @@
-import { ChampionType } from "../types";
+import { ChampionsType } from "../types";
 
 export class ChampionManager {
-  private champions: ChampionType[];
+  private champions: ChampionsType[];
   private uniqueTags: string[];
 
   constructor(inputObject: Record<string, any>[]) {
@@ -19,15 +19,19 @@ export class ChampionManager {
       });
     });
   }
-  private objectToArray(inputObject: Record<string, any>): any[] {
+  private objectToArray(inputObject: Record<string, any>): ChampionsType[] {
     if (Object.keys(inputObject).length === 0) {
       return [];
     }
     const keys = Object.keys(inputObject);
-    const resultArray = keys.map((key) => inputObject[key]);
+    const resultArray = keys.map((key) => {
+      const championData = inputObject[key];
+      // Dodajemy początkową wartość stared jako false
+      return { stared: false, ...championData };
+    });
     return resultArray;
   }
-  public getChempionsInArray = (): ChampionType[] => this.champions;
+  public getChempionsInArray = (): ChampionsType[] => this.champions;
 
   public getAllUniqueTags = (): string[] => this.uniqueTags;
 

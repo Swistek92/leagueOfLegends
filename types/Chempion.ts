@@ -1,4 +1,5 @@
 type ChempionType = {
+  stared: boolean;
   type: string;
   format: string;
   version: string;
