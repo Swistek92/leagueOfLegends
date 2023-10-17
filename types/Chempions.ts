@@ -1,4 +1,5 @@
 type ChampionsType = {
+  stared: boolean;
   version: string;
   id: string;
   key: string;

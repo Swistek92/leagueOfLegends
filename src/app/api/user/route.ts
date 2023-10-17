@@ -3,15 +3,7 @@ import connectMongoDb from "../../../../helpers/connectMongoDB";
 import UserModel, { UserDocument } from "../../../../models/user.model";
 import UserService from "../../../../service/user.service";
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: "500kb",
-    },
-  },
-  // Specifies the maximum allowed duration for this function to execute (in seconds)
-  maxDuration: 5,
-};
+export const maxDuration = 5;
 
 export async function PATCH(req: Request, res: Response) {
   await connectMongoDb();

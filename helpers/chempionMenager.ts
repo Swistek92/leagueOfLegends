@@ -40,4 +40,11 @@ export class ChampionManager {
       this.uniqueTags = [tag, ...this.uniqueTags];
     }
   };
+  public markChampionsAsStared = (championNames: string[]): void => {
+    this.champions.forEach((champion) => {
+      if (championNames.includes(champion.name)) {
+        champion.stared = true;
+      }
+    });
+  };
 }

@@ -18,7 +18,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(options);
+  // const session = await getServerSession(options);
 
   // const allChempions: string = "All";
 
@@ -31,7 +31,6 @@ export default async function RootLayout({
   // const tags = championManager.getAllUniqueTags();
   // const chempions = championManager.getChempionsInArray();
 
- 
   return (
     <html lang='en'>
       <body className={`${inter.className} `}>

@@ -3,23 +3,15 @@ import connectMongoDb from "../../../../../helpers/connectMongoDB";
 import { UserDocument } from "../../../../../models/user.model";
 import UserService from "../../../../../service/user.service";
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: "500kb",
-    },
-  },
-  // Specifies the maximum allowed duration for this function to execute (in seconds)
-  maxDuration: 5,
-};
+export const maxDuration = 5;
 
 export async function POST(req: Request, res: Response) {
   await connectMongoDb();
   const body: UserDocument = await req.json();
   try {
-    const exitstedUser = await UserService.findUser({ email: body.email });
-    if (exitstedUser) {
-      return NextResponse.json({ exitstedUser }, { status: 200 });
+    const user = await UserService.findUser({ email: body.email });
+    if (user) {
+      return NextResponse.json({ user }, { status: 200 });
     }
   } catch (error) {
     return NextResponse.json(

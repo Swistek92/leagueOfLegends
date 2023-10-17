@@ -1,10 +1,13 @@
 "use client";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import React from "react";
 import { ChampionsType } from "../types";
 import Image from "next/image";
-import { redirect } from "next/navigation";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { UserDocument } from "../models/user.model";
+import { ChampionManager, useLocalStorage } from "../helpers";
+
 const ChempionsList = ({
   tags,
   champions,
@@ -12,17 +15,44 @@ const ChempionsList = ({
   tags: string[];
   champions: ChampionsType[];
 }) => {
+  // states
   const [select, setSelectValue] = useState<string>(tags[0]);
   const [filterValue, setFilterValue] = useState<string>("");
   const [filteredChampions, setFilteredChmapions] =
     useState<ChampionsType[]>(champions);
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [noChempions, setNoChempions] = useState(false);
+  const [user, setUser] = useState<UserDocument | any>();
+  // const [stared, setStared] = useState<string[]>([]);
+  const [stared, setStared] = useLocalStorage<string[]>("stared", []);
+  // session
+
+  const session = useSession({
+    required: false,
+  });
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) =>
     setSelectValue(event.target.value);
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setFilterValue(event.target.value);
+
+  const handleStared = (e: string) => {
+    if (!session.data?.user) {
+      return;
+    }
+
+    if (stared.includes(e)) {
+      setStared(stared.filter((item) => item !== e));
+    } else {
+      setStared([e, ...stared]);
+    }
+  };
+
+  // use effect
+  useEffect(() => {
+    console.log(stared.includes("Aatrox"));
+    console.log(stared);
+  }, [stared]);
 
   useEffect(() => {
     const filtered = champions.filter((champion) => {
@@ -39,11 +69,39 @@ const ChempionsList = ({
     } else {
       setNoChempions(false);
     }
-  }, [select, filterValue, champions]);
+
+    if (session?.data) {
+      const fetchData = async () => {
+        try {
+          const response = await fetch("http://localhost:3000/api/user/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(session.data.user),
+          });
+          const { user }: { user: UserDocument } = await response.json();
+          setUser(user);
+          if (user.stared) {
+            const combined = stared.concat(user.stared);
+            setStared([...new Set(combined)]);
+          }
+          console.log("USER", user);
+        } catch (error) {
+          console.log(error);
+          console.log("err fetch");
+        }
+      };
+
+      fetchData();
+      // console.log("userdata effect ", data);
+    }
+  }, [select, filterValue, champions, session]);
 
   return (
     <div className=''>
-      <div className='flex items-center justify-center w-full bg-red-600 fixed top-0 h-10'>
+      {/* FILTER */}
+      <div className='z-30 flex items-center justify-center w-full bg-red-600 fixed top-0 h-10'>
         <button className='w-full' onClick={() => setShowFilter(!showFilter)}>
           {!showFilter ? "show filter" : "hide filter"}
         </button>
@@ -95,7 +153,7 @@ const ChempionsList = ({
           )}
         </div>
       )}
-
+      {/* CHEMPIONS LIST */}
       <div
         className={`flex flex-col items-center ${
           showFilter ? "mt-44" : "mt-10"
@@ -103,10 +161,11 @@ const ChempionsList = ({
       >
         {filteredChampions.map((e) => {
           return (
-            <Link
-              href={`/details/${e.name}`}
+            <div
               key={e.key}
-              className='bg-red-300 w-80 rounded-lg m-3 p-3 flex flex-col cursor-pointer items-center hover:bg-red-700'
+              className={`relative  w-80 rounded-lg m-3 p-3 flex flex-col  items-center ${
+                stared.includes(e.name) ? "bg-red-300" : "bg-yellow-700"
+              }`}
             >
               <hr />
               <h1 className='text-4xl'>{e.id}</h1>
@@ -116,11 +175,23 @@ const ChempionsList = ({
                 alt='champ'
                 src={`http://ddragon.leagueoflegends.com/cdn/13.19.1/img/champion/${e.id}.png`}
               />
-
               {e.tags.map((e) => (
                 <p key={e}>{e}</p>
               ))}
-            </Link>
+              <button
+                onClick={() => handleStared(e.name)}
+                className='absolute top-0 right-0 bg-yellow-400 p-5 rounded-bl-xl rounded-tr-lg hover:bg-yellow-500 '
+              >
+                stared
+              </button>
+
+              <Link
+                href={`/details/${e.name}`}
+                className='w-full bg-red-500 text-center rounded-2xl hover:bg-red-700'
+              >
+                details
+              </Link>
+            </div>
           );
         })}
       </div>

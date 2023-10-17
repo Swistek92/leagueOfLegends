@@ -6,9 +6,9 @@ import { redirect } from "next/navigation";
 
 const Navigation = () => {
   const { data } = useSession({
-    required: true,
+    required: false,
   });
-  console.log(data);
+  // console.log(data);
   {
     data && <p> {data?.user?.name}</p>;
   }

@@ -6,6 +6,9 @@ const nextConfig = {
   env: {
     ALL_CHEMPIONS: "All",
   },
+  compiler: {
+    styledComponents: true,
+  },
 };
 
 module.exports = nextConfig;
