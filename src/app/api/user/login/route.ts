@@ -6,6 +6,7 @@ import UserService from "../../../../../service/user.service";
 export const maxDuration = 5;
 
 export async function POST(req: Request, res: Response) {
+  console.log("im in login ");
   await connectMongoDb();
   const body: UserDocument = await req.json();
   try {

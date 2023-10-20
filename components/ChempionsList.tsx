@@ -7,6 +7,8 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { UserDocument } from "../models/user.model";
 import { ChampionManager, useLocalStorage } from "../helpers";
+import { redirect } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 const ChempionsList = ({
   tags,
@@ -22,7 +24,7 @@ const ChempionsList = ({
     useState<ChampionsType[]>(champions);
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [noChempions, setNoChempions] = useState(false);
-  const [user, setUser] = useState<UserDocument | any>();
+  const [user, setUser] = useState<UserDocument | undefined>();
   // const [stared, setStared] = useState<string[]>([]);
   const [stared, setStared] = useLocalStorage<string[]>("stared", []);
   // session
@@ -38,7 +40,7 @@ const ChempionsList = ({
 
   const handleStared = (e: string) => {
     if (!session.data?.user) {
-      return;
+      return signIn();
     }
 
     if (stared.includes(e)) {
@@ -49,10 +51,24 @@ const ChempionsList = ({
   };
 
   // use effect
-  useEffect(() => {
-    console.log(stared.includes("Aatrox"));
-    console.log(stared);
-  }, [stared]);
+  const sendData = async () => {
+    const data = user;
+    data!.stared = stared;
+    console.log("data", data);
+    try {
+      const response = await fetch("http://localhost:3000/api/user/", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+      console.log("err fetch");
+    }
+  };
 
   useEffect(() => {
     const filtered = champions.filter((champion) => {
@@ -81,12 +97,13 @@ const ChempionsList = ({
             body: JSON.stringify(session.data.user),
           });
           const { user }: { user: UserDocument } = await response.json();
+
           setUser(user);
-          if (user.stared) {
+          if (user.stared && user.stared.length > 1) {
             const combined = stared.concat(user.stared);
             setStared([...new Set(combined)]);
+            console.log("set stared");
           }
-          console.log("USER", user);
         } catch (error) {
           console.log(error);
           console.log("err fetch");
@@ -94,6 +111,7 @@ const ChempionsList = ({
       };
 
       fetchData();
+      console.log("stared", stared);
       // console.log("userdata effect ", data);
     }
   }, [select, filterValue, champions, session]);
@@ -156,9 +174,26 @@ const ChempionsList = ({
       {/* CHEMPIONS LIST */}
       <div
         className={`flex flex-col items-center ${
-          showFilter ? "mt-44" : "mt-10"
+          showFilter ? "mt-44" : "mt-20"
         }`}
       >
+        {/* SAVE DATA */}
+        {user?.stared !== stared && (
+          <div
+            className={`flex items-center justify-center w-full fixed  z-10 ${
+              !showFilter ? "top-10" : "top-44"
+            }`}
+          >
+            <button
+              onClick={() => {
+                sendData();
+              }}
+              className='w-full bg-red-900 hover:bg-red-800 h-10 '
+            >
+              save stared
+            </button>
+          </div>
+        )}
         {filteredChampions.map((e) => {
           return (
             <div
